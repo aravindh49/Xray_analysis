@@ -1,0 +1,19 @@
+@echo off
+echo Checking for model file...
+:check
+if exist "rad_dino_finetuned.pth" (
+    echo Model training completed. Moving file...
+    move rad_dino_finetuned.pth app\models\
+    echo Starting backend server...
+    python -m app.main
+) else (
+    if exist "app\models\rad_dino_finetuned.pth" (
+        echo Model already in place. Starting backend server...
+        python -m app.main
+    ) else (
+        echo Model file not found yet. Training might be in progress...
+        echo Waiting 10 seconds...
+        timeout /t 10
+        goto check
+    )
+)
